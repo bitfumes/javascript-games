@@ -1,2 +1,5 @@
-console.log("Hiiii from external file");
-alert("heyy");
+firstname = "Sarthak";
+lastname = "Shrivastava";
+console.log(firstname, lastname);
+firstname = "John";
+console.log(firstname, lastname);
