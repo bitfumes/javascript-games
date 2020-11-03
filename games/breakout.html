@@ -15,15 +15,27 @@
         const canvasW = canvas.width
 
         let x, y, dy, dx, interval
+        let radius = 10
+        let paddleW = 30
+        let paddleX = canvasW/2 - paddleW/2
+        let paddleY = canvasH - 10
         setVariables()
-        drawCircle(x,y)
-        startGame()
+        drawBall()
+        drawPaddle()
+        // startGame()
 
         function detectCollision() {
             if(x + dx >= canvasW || x + dx < 0){
                 dx = -dx
             }
-            if( y + dy > canvasH || y + dy < 0){
+
+            if( y + dy > canvasH - radius){
+                if(x + dx > paddleX && x + dx < (paddleX + paddleW)){
+                    dy = -dy
+                }
+            }
+
+            if(y + dy < 0){
                 dy = -dy
             }
         }
@@ -35,12 +47,13 @@
                 y = y + dy
                 checkGameover()
                 ctx.clearRect(0,0,canvasW,canvasH)
-                drawCircle(x,y)
+                drawPaddle()
+                drawBall()
             }, 20)
         }
 
         function checkGameover() {
-            if(y === canvasH){
+            if(y === canvasH - radius){
                 alert('game over')
                 clearInterval(interval)
                 setVariables()
@@ -54,10 +67,18 @@
             dy = -5
         }
 
-        function drawCircle(x,y) {
+        function drawBall() {
             ctx.beginPath()
-            ctx.arc(x,y,15,0,2* Math.PI,false)
-            ctx.fillStyle = "green"
+            ctx.arc(x,y,radius,0,2* Math.PI,false)
+            ctx.fillStyle = "#389393"
+            ctx.fill()
+            ctx.closePath()
+        }
+
+        function drawPaddle() {
+            ctx.beginPath()
+            ctx.rect(paddleX,paddleY,paddleW,10)
+            ctx.fillStyle = "#3797a4"
             ctx.fill()
             ctx.closePath()
         }
