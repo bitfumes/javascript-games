@@ -18,25 +18,47 @@
         let leftPressed = false
         let x, y, dy, dx, interval ,radius ,paddleW ,paddleX ,paddleY, brickW,brickH, brickOffset
         let bricks = []
+        let score = 0
         setVariables()
         drawBall()
         drawPaddle()
+        createBrickArray()
         drawBricks()
+        drawScore()
         paddleNavigation()
         // startGame()
 
-        function drawBricks() {
+        function drawScore() {
+            ctx.beginPath()
+            ctx.fillStyle = "#000"
+            ctx.fill()
+            ctx.fillText("Score: " + score,9,10)
+            ctx.closePath()
+        }
+
+        function createBrickArray() {
             for (let j = 0; j < 3; j++) {
                 bricks[j] = []
                 for (let i = 0; i < 6; i++) {
-                    const brickX = 10 + i * (brickW + brickOffset)
-                    const brickY = (10+brickOffset) * (j+1)
-                    bricks[j][i] = {x: brickX,y: brickY}
-                    ctx.beginPath()
-                    ctx.rect(brickX, brickY,brickW,brickH)
-                    ctx.fillStyle = "#3797a4"
-                    ctx.fill()
-                    ctx.closePath()
+                    bricks[j][i] = {x: 0,y:0, isVisible:true}
+                }
+            }
+        }
+
+        function drawBricks() {
+            for (let j = 0; j < 3; j++) {
+                for (let i = 0; i < 6; i++) {
+                    if(bricks[j][i].isVisible){
+                        const brickX = 10 + i * (brickW + brickOffset)
+                        const brickY = (10+brickOffset) * (j+1)
+                        bricks[j][i].x = brickX
+                        bricks[j][i].y = brickY
+                        ctx.beginPath()
+                        ctx.rect(brickX, brickY,brickW,brickH)
+                        ctx.fillStyle = "#3797a4"
+                        ctx.fill()
+                        ctx.closePath()
+                    }
                 }
             }
         }
@@ -72,6 +94,7 @@
             if( y + dy > canvasH - radius){
                 if(x + dx > paddleX && x + dx < (paddleX + paddleW)){
                     dy = -dy
+                    dx = dx + (x + dx- paddleX)/100
                 }
             }
 
@@ -82,8 +105,13 @@
             for (let b = 0; b < bricks.length; b++) {
                 for (let i = 0; i < bricks[b].length; i++) {
                     const brick = bricks[b][i]
-                    if(x > brick.x && x < (brick.x + brickW) && y > brick.y && y < brick.y + brickH){
-                        dy = -dy
+                    if(brick.isVisible){
+                        if(x > brick.x && x < (brick.x + brickW) && y > brick.y && y < brick.y + brickH){
+                            bricks[b][i].isVisible = false
+                            score += 1
+                            dy = -dy
+                            checkYouWon()
+                        }
                     }
                 }
             }
@@ -106,6 +134,7 @@
                     drawPaddle()
                     drawBall()
                     drawBricks()
+                    drawScore()
                 }, 20)
             }
         }
@@ -113,6 +142,15 @@
         function checkGameover() {
             if(y === canvasH){
                 alert('game over')
+                clearInterval(interval)
+                interval = null
+                setVariables()
+            }
+        }
+
+        function checkYouWon() {
+            if(score === 18){
+                alert('You Won !!')
                 clearInterval(interval)
                 interval = null
                 setVariables()
