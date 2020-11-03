@@ -6,22 +6,53 @@
     <title>Breakout Game</title>
 </head>
 <body>
-    <canvas id="canvas" height="300">Heyyy canvas is not supported</canvas>
+    <canvas id="canvas" height="300" style="border:1px solid black;border-bottom: 2px solid brown;">Heyyy canvas is not supported</canvas>
+    <button onclick="startGame()">Start</button>
     <script>
         const canvas = document.getElementById('canvas')
         const ctx = canvas.getContext('2d')
-        let x = 100
-        let y = 100
-        const dx = 5
-        const dy = 5
-        drawCircle(x,y)
+        const canvasH = canvas.height
+        const canvasW = canvas.width
 
-        setInterval(() => {
-            x = x + dx
-            y = y + dy
-            ctx.clearRect(0,0,canvas.width,canvas.height)
-            drawCircle(x,y)
-        }, 20);
+        let x, y, dy, dx, interval
+        setVariables()
+        drawCircle(x,y)
+        startGame()
+
+        function detectCollision() {
+            if(x + dx >= canvasW || x + dx < 0){
+                dx = -dx
+            }
+            if( y + dy > canvasH || y + dy < 0){
+                dy = -dy
+            }
+        }
+
+        function startGame() {
+            interval = setInterval(() => {
+                detectCollision()
+                x = x + dx
+                y = y + dy
+                checkGameover()
+                ctx.clearRect(0,0,canvasW,canvasH)
+                drawCircle(x,y)
+            }, 20)
+        }
+
+        function checkGameover() {
+            if(y === canvasH){
+                alert('game over')
+                clearInterval(interval)
+                setVariables()
+            }
+        }
+
+        function setVariables() {
+            x = canvasW/2
+            y = canvasH - 20
+            dx = 5
+            dy = -5
+        }
 
         function drawCircle(x,y) {
             ctx.beginPath()
