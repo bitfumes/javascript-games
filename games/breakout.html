@@ -16,32 +16,53 @@
 
         let rightPressed = false
         let leftPressed = false
-        document.addEventListener('keydown',handleKeyDown)
-        document.addEventListener('keyup',handleKeyUp)
-
-        function handleKeyDown(e) {
-            if(e.key === "ArrowRight"){
-                rightPressed = true
-            }
-            if(e.key === "ArrowLeft"){
-                leftPressed = true
-            }
-        }
-
-        function handleKeyUp(e) {
-            if(e.key === "ArrowRight"){
-                rightPressed = false
-            }
-            if(e.key === "ArrowLeft"){
-                leftPressed = false
-            }
-        }
-
-        let x, y, dy, dx, interval ,radius ,paddleW ,paddleX ,paddleY
+        let x, y, dy, dx, interval ,radius ,paddleW ,paddleX ,paddleY, brickW,brickH, brickOffset
+        let bricks = []
         setVariables()
         drawBall()
         drawPaddle()
+        drawBricks()
+        paddleNavigation()
         // startGame()
+
+        function drawBricks() {
+            for (let j = 0; j < 3; j++) {
+                bricks[j] = []
+                for (let i = 0; i < 6; i++) {
+                    const brickX = 10 + i * (brickW + brickOffset)
+                    const brickY = (10+brickOffset) * (j+1)
+                    bricks[j][i] = {x: brickX,y: brickY}
+                    ctx.beginPath()
+                    ctx.rect(brickX, brickY,brickW,brickH)
+                    ctx.fillStyle = "#3797a4"
+                    ctx.fill()
+                    ctx.closePath()
+                }
+            }
+        }
+
+        function paddleNavigation() {
+            document.addEventListener('keydown',handleKeyDown)
+            document.addEventListener('keyup',handleKeyUp)
+
+            function handleKeyDown(e) {
+                if(e.key === "ArrowRight"){
+                    rightPressed = true
+                }
+                if(e.key === "ArrowLeft"){
+                    leftPressed = true
+                }
+            }
+
+            function handleKeyUp(e) {
+                if(e.key === "ArrowRight"){
+                    rightPressed = false
+                }
+                if(e.key === "ArrowLeft"){
+                    leftPressed = false
+                }
+            }
+        }
 
         function detectCollision() {
             if(x + dx >= canvasW || x + dx < 0){
@@ -56,6 +77,15 @@
 
             if(y + dy < 0){
                 dy = -dy
+            }
+
+            for (let b = 0; b < bricks.length; b++) {
+                for (let i = 0; i < bricks[b].length; i++) {
+                    const brick = bricks[b][i]
+                    if(x > brick.x && x < (brick.x + brickW) && y > brick.y && y < brick.y + brickH){
+                        dy = -dy
+                    }
+                }
             }
         }
 
@@ -75,6 +105,7 @@
                     ctx.clearRect(0,0,canvasW,canvasH)
                     drawPaddle()
                     drawBall()
+                    drawBricks()
                 }, 20)
             }
         }
@@ -97,6 +128,10 @@
             paddleW = 50
             paddleX = canvasW/2 - paddleW/2
             paddleY = canvasH - 10
+
+            brickW = 40
+            brickH = 10
+            brickOffset =8
         }
 
         function drawBall() {
