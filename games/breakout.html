@@ -10,19 +10,26 @@
     <script>
         const canvas = document.getElementById('canvas')
         const ctx = canvas.getContext('2d')
-        // ctx.moveTo(0,0)
-        // ctx.lineTo(250,50)
-        ctx.beginPath()
-        ctx.rect(10,10,40,40)
-        ctx.fillStyle = "blue"
-        ctx.fill()
-        ctx.closePath()
+        let x = 100
+        let y = 100
+        const dx = 5
+        const dy = 5
+        drawCircle(x,y)
 
-        ctx.beginPath()
-        ctx.arc(100,100,30,0,2* Math.PI,false)
-        ctx.fillStyle = "green"
-        ctx.fill()
-        ctx.closePath()
+        setInterval(() => {
+            x = x + dx
+            y = y + dy
+            ctx.clearRect(0,0,canvas.width,canvas.height)
+            drawCircle(x,y)
+        }, 20);
+
+        function drawCircle(x,y) {
+            ctx.beginPath()
+            ctx.arc(x,y,15,0,2* Math.PI,false)
+            ctx.fillStyle = "green"
+            ctx.fill()
+            ctx.closePath()
+        }
     </script>
 </body>
 </html>
