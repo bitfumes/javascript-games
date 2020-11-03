@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout Game</title>
+</head>
+<body>
+    <canvas id="canvas" height="300">Heyyy canvas is not supported</canvas>
+    <script>
+        const canvas = document.getElementById('canvas')
+        const ctx = canvas.getContext('2d')
+        // ctx.moveTo(0,0)
+        // ctx.lineTo(250,50)
+        ctx.beginPath()
+        ctx.rect(10,10,40,40)
+        ctx.fillStyle = "blue"
+        ctx.fill()
+        ctx.closePath()
+
+        ctx.beginPath()
+        ctx.arc(100,100,30,0,2* Math.PI,false)
+        ctx.fillStyle = "green"
+        ctx.fill()
+        ctx.closePath()
+    </script>
+</body>
+</html>
