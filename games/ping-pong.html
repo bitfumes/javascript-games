@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PingPong Game</title>
+  </head>
+  <body>
+    <canvas id="canvas" height="300" style="border: 1px solid black"
+      >Heyyy canvas is not supported</canvas
+    >
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const canvasH = canvas.height;
+      const canvasW = canvas.width;
+
+      let ball = { x: 150, y: 150, r: 10 };
+      let paddle = { h: 50, w: 5 };
+      let leftPaddle = { x: 0, y: 125 };
+      let rightPaddle = { x: canvasW - 5, y: 125 };
+
+      drawBall();
+      drawLeftPaddle();
+      drawRightPaddle();
+
+      function drawRightPaddle() {
+        ctx.beginPath();
+        ctx.rect(rightPaddle.x, rightPaddle.y, paddle.w, paddle.h);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      function drawLeftPaddle() {
+        ctx.beginPath();
+        ctx.rect(leftPaddle.x, leftPaddle.y, paddle.w, paddle.h);
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+      function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+      }
+    </script>
+  </body>
+</html>
