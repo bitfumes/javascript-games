@@ -12,18 +12,93 @@
         const canvas = document.getElementById('canvas')
         const ctx = canvas.getContext('2d')
 
-        let snakeH = snakeW = 10
-        let snakes = [
-            {x: 40, y :10},
-            {x: 30, y :10},
+        let snakeH = snakeW = 5
+        let dx = snakeW
+        let dy = 0
+        let canvasH = canvas.height
+        let canvasW = canvas.width
+        let rightPressed = leftPressed = upPressed = downPressed = false
+        let direction = 'x'
+        let snake = [
+            {x: 25, y :10},
             {x: 20, y :10},
+            {x: 15, y :10},
             {x: 10, y :10}
         ]
 
         drawSnake()
+        moveSnake()
+        snakeNavigation()
+
+        function snakeNavigation() {
+            document.addEventListener('keydown',handleKeyDown)
+            document.addEventListener('keyup',handleKeyUp)
+
+            function handleKeyDown(e) {
+                if(e.key=== 'ArrowDown'){
+                    downPressed = true
+                }
+                if(e.key=== 'ArrowUp'){
+                    upPressed = true
+                }
+                if(e.key=== 'ArrowLeft'){
+                    leftPressed = true
+                }
+                if(e.key=== 'ArrowRight'){
+                    rightPressed = true
+                }
+            }
+
+            function handleKeyUp(e) {
+                if(e.key=== 'ArrowDown'){
+                    downPressed = false
+                }
+                if(e.key=== 'ArrowUp'){
+                    upPressed = false
+                }
+                if(e.key=== 'ArrowLeft'){
+                    leftPressed = false
+                }
+                if(e.key=== 'ArrowRight'){
+                    rightPressed = false
+                }
+            }
+        }
+
+        function moveSnake() {
+            setInterval(() => {
+                // {x: 40, y :10},
+                // {x: 30, y :10},
+                // {x: 20, y :10},
+                // {x: 10, y :10}
+                if(downPressed){
+                    dy = snakeW
+                    dx = 0
+                }
+                if(rightPressed){
+                    dx = snakeW
+                    dy = 0
+                }
+                if(leftPressed){
+                    dx = -snakeW
+                    dy = 0
+                }
+                if(upPressed){
+                    dy = - snakeW
+                    dx = 0
+                }
+
+                const head = {x : snake[0].x + dx, y: snake[0].y + dy }
+                snake.unshift(head)
+                snake.pop()
+
+                ctx.clearRect(0,0,canvasW,canvasH)
+                drawSnake()
+            }, 20);
+        }
 
         function drawSnake() {
-            snakes.forEach(snake => {
+            snake.forEach(snake => {
                 ctx.beginPath()
                 ctx.rect(snake.x,snake.y,snakeW,snakeH)
                 ctx.fillStyle="black"
