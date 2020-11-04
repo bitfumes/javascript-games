@@ -15,7 +15,7 @@
       const canvasH = canvas.height;
       const canvasW = canvas.width;
 
-      let ball = { x: 150, y: 150, r: 10 };
+      let ball = { x: 150, y: 150, r: 10, dx: 2, dy: 1 };
       let paddle = { h: 50, w: 5 };
       let leftPaddle = { x: 0, y: 125 };
       let rightPaddle = { x: canvasW - 5, y: 125 };
@@ -23,6 +23,22 @@
       drawBall();
       drawLeftPaddle();
       drawRightPaddle();
+      moveBall();
+
+      function moveBall() {
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+
+        rightPaddle.y = ball.y - paddle.h / 2;
+
+        ctx.clearRect(0, 0, canvasW, canvasH);
+
+        drawBall();
+        drawLeftPaddle();
+        drawRightPaddle();
+
+        requestAnimationFrame(moveBall);
+      }
 
       function drawRightPaddle() {
         ctx.beginPath();
