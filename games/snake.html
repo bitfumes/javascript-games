@@ -18,17 +18,81 @@
         let canvasH = canvas.height
         let canvasW = canvas.width
         let rightPressed = leftPressed = upPressed = downPressed = false
-        let direction = 'x'
+        let foodX, foodY
         let snake = [
-            {x: 25, y :10},
-            {x: 20, y :10},
-            {x: 15, y :10},
             {x: 10, y :10}
         ]
 
         drawSnake()
+        drawFood()
         moveSnake()
+        randomFood()
         snakeNavigation()
+
+        function randomFood() {
+            foodX = Math.floor(Math.random() * 290/5) * 5;
+            foodY = Math.floor(Math.random() * 290/5) * 5;
+        }
+
+        function drawFood() {
+            ctx.beginPath()
+            ctx.rect(foodX,foodY,snakeW,snakeH)
+            ctx.fillStyle="brown"
+            ctx.fill()
+            ctx.closePath()
+        }
+
+        function moveSnake() {
+            setInterval(() => {
+                handleDirection()
+
+                growSnake()
+
+                const head = {x : snake[0].x + dx, y: snake[0].y + dy }
+                snake.unshift(head)
+                snake.pop()
+
+                ctx.clearRect(0,0,canvasW,canvasH)
+                drawSnake()
+                drawFood()
+            }, 100);
+        }
+
+        function growSnake() {
+            if(snake[0].x === foodX && snake[0].y === foodY){
+                snake.push({x: foodX, y: foodY})
+                randomFood()
+            }
+        }
+
+        function drawSnake() {
+            snake.forEach(snake => {
+                ctx.beginPath()
+                ctx.rect(snake.x,snake.y,snakeW,snakeH)
+                ctx.fillStyle="black"
+                ctx.fill()
+                ctx.closePath()
+            })
+        }
+
+        function handleDirection() {
+            if(downPressed){
+                    dy = snakeW
+                    dx = 0
+                }
+                if(rightPressed){
+                    dx = snakeW
+                    dy = 0
+                }
+                if(leftPressed){
+                    dx = -snakeW
+                    dy = 0
+                }
+                if(upPressed){
+                    dy = - snakeW
+                    dx = 0
+                }
+        }
 
         function snakeNavigation() {
             document.addEventListener('keydown',handleKeyDown)
@@ -63,48 +127,6 @@
                     rightPressed = false
                 }
             }
-        }
-
-        function moveSnake() {
-            setInterval(() => {
-                // {x: 40, y :10},
-                // {x: 30, y :10},
-                // {x: 20, y :10},
-                // {x: 10, y :10}
-                if(downPressed){
-                    dy = snakeW
-                    dx = 0
-                }
-                if(rightPressed){
-                    dx = snakeW
-                    dy = 0
-                }
-                if(leftPressed){
-                    dx = -snakeW
-                    dy = 0
-                }
-                if(upPressed){
-                    dy = - snakeW
-                    dx = 0
-                }
-
-                const head = {x : snake[0].x + dx, y: snake[0].y + dy }
-                snake.unshift(head)
-                snake.pop()
-
-                ctx.clearRect(0,0,canvasW,canvasH)
-                drawSnake()
-            }, 20);
-        }
-
-        function drawSnake() {
-            snake.forEach(snake => {
-                ctx.beginPath()
-                ctx.rect(snake.x,snake.y,snakeW,snakeH)
-                ctx.fillStyle="black"
-                ctx.fill()
-                ctx.closePath()
-            })
         }
 
     </script>
