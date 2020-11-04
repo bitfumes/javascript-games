@@ -25,6 +25,17 @@
       drawRightPaddle();
       moveBall();
 
+      function detectCollision() {
+        if (ball.x > rightPaddle.x - ball.r) {
+          ball.dx = -ball.dx;
+        }
+
+        // Detect Top or Bottom Collision
+        if (ball.y > canvasH - ball.r || ball.y < 0 + ball.r) {
+          ball.dy = -ball.dy;
+        }
+      }
+
       function moveBall() {
         ball.x += ball.dx;
         ball.y += ball.dy;
@@ -32,6 +43,8 @@
         rightPaddle.y = ball.y - paddle.h / 2;
 
         ctx.clearRect(0, 0, canvasW, canvasH);
+
+        detectCollision();
 
         drawBall();
         drawLeftPaddle();
