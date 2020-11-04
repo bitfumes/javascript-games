@@ -6,7 +6,14 @@
     <title>Snake Game</title>
 </head>
 <body>
-    <canvas id="canvas" width="300" height="300" style="border: 1px solid black"></canvas>
+    <div style="display: flex;">
+        <canvas id="canvas" width="300" height="300" style="border: 1px solid black"></canvas>
+
+        <div>
+            <p>Your Scores on each round</p>
+            <ol id="scoreOl"></ol>
+        </div>
+    </div>
 
     <script>
         const canvas = document.getElementById('canvas')
@@ -16,7 +23,8 @@
         let canvasH = canvas.height
         let canvasW = canvas.width
         let foodX, foodY
-        let interval, snake, rightPressed , leftPressed , upPressed , downPressed, dx, dy
+        let interval, snake, rightPressed , leftPressed , upPressed , downPressed, dx, dy, score
+        let rounds = []
 
         setInitialVariables()
         drawSnake()
@@ -24,11 +32,18 @@
         moveSnake()
         randomFood()
         snakeNavigation()
+        showScore()
+
+        function showScore() {
+            const scoreol = document.getElementById('scoreOl')
+            scoreol.innerHTML = rounds.map(round => `<li>Score: ${round.score}</li>`).join(' ')
+        }
 
         function setInitialVariables() {
             interval = null
             dx = snakeW
             dy = 0
+            score = 0
             rightPressed = leftPressed = upPressed = downPressed = false
             snake = [{x:10,y:10}]
         }
@@ -43,6 +58,14 @@
             ctx.rect(foodX,foodY,snakeW,snakeH)
             ctx.fillStyle="brown"
             ctx.fill()
+            ctx.closePath()
+        }
+
+        function drawScore() {
+            ctx.beginPath()
+            ctx.fillStyle = "#000"
+            ctx.fill()
+            ctx.fillText("Score is " + score,10,10)
             ctx.closePath()
         }
 
@@ -62,6 +85,7 @@
                     ctx.clearRect(0,0,canvasW,canvasH)
                     drawSnake()
                     drawFood()
+                    drawScore()
                 }, 100);
             }
         }
@@ -79,6 +103,8 @@
 
         function reset() {
             clearInterval(interval)
+            rounds.push({score:score})
+            showScore()
             setInitialVariables()
             randomFood()
             moveSnake()
@@ -87,6 +113,7 @@
         function growSnake() {
             if(snake[0].x === foodX && snake[0].y === foodY){
                 snake.push({x: foodX, y: foodY})
+                score += 1
                 randomFood()
             }
         }
