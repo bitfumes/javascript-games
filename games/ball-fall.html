@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ball Fall Game</title>
+  </head>
+  <body>
+    <canvas id="canvas" height="300" style="border: 1px solid black"
+      >Heyyy canvas is not supported</canvas
+    >
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const canvasH = canvas.height;
+      const canvasW = canvas.width;
+
+      let ball = { x: 150, y: 100, r: 5 };
+      let platformH = 10;
+      let platformW = canvasW;
+      let platforms = [
+        { x: 0, y: 150 },
+        { x: 0, y: 200 },
+        { x: 0, y: 250 },
+      ];
+      drawBall();
+      drawPlatforms();
+
+      function drawPlatforms() {
+        platforms.forEach((pl) => {
+          createPl(pl);
+        });
+
+        function createPl(pl) {
+          ctx.beginPath();
+          ctx.rect(pl.x, pl.y, platformW, platformH);
+          ctx.fillStyle = "black";
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+
+      function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+        ctx.fillStyle = "brown";
+        ctx.fill();
+        ctx.closePath();
+      }
+    </script>
+  </body>
+</html>
