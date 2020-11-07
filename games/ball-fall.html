@@ -15,21 +15,55 @@
       const canvasH = canvas.height;
       const canvasW = canvas.width;
 
-      let ball = { x: 150, y: 100, r: 5 };
+      let ball = { x: 150, y: -10, r: 5 };
       let platformH = 10;
+      let plSpeed = 1;
       let platformW = canvasW;
+      let plDiff = 50;
+      let leftPressed = (rightPressed = false);
 
       function randHoleX() {
         return Math.floor(Math.random() * 270);
       }
 
-      let platforms = [
-        { x: 0, y: 150, holeX: randHoleX(), holeW: 20 },
-        { x: 0, y: 200, holeX: randHoleX(), holeW: 20 },
-        { x: 0, y: 250, holeX: randHoleX(), holeW: 20 },
-      ];
+      let platforms = [{ x: 0, y: canvasH, holeX: randHoleX(), holeW: 20 }];
       drawBall();
       drawPlatforms();
+      movePlatforms();
+      nagivateBall();
+
+      function movePlatforms() {
+        let count = 0;
+        setInterval(() => {
+          if (count === Math.floor(plDiff / plSpeed)) {
+            if (platforms.length > 10) {
+              platforms.splice(0, 4);
+            }
+
+            const lastPlatform = platforms[platforms.length - 1];
+            platforms.push({
+              x: 0,
+              y: lastPlatform.y + plDiff,
+              holeX: randHoleX(),
+              holeW: 20,
+            });
+
+            count = 0;
+          }
+
+          platforms.forEach((pl) => {
+            pl.y -= plSpeed;
+          });
+
+          ctx.clearRect(0, 0, canvasW, canvasH);
+
+          drawPlatforms();
+          drawBall();
+          count++;
+
+          console.log(platforms.length);
+        }, 20);
+      }
 
       function drawPlatforms() {
         platforms.forEach((pl) => {
@@ -55,11 +89,47 @@
       }
 
       function drawBall() {
+        const firstPl = platforms[0];
+        if (ball.y > firstPl.y - ball.r) {
+          ball.y = firstPl.y - ball.r;
+        } else {
+          ball.y += 5;
+        }
+
+        // Navigation
+        if (leftPressed && ball.x - ball.r > 0) {
+          ball.x -= 5;
+        }
+        if (rightPressed && ball.x + ball.r < canvasW) {
+          ball.x += 5;
+        }
+
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
         ctx.fillStyle = "brown";
         ctx.fill();
         ctx.closePath();
+      }
+
+      function nagivateBall() {
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowLeft") {
+            leftPressed = true;
+          }
+
+          if (e.key === "ArrowRight") {
+            rightPressed = true;
+          }
+        });
+        document.addEventListener("keyup", (e) => {
+          if (e.key === "ArrowLeft") {
+            leftPressed = false;
+          }
+
+          if (e.key === "ArrowRight") {
+            rightPressed = false;
+          }
+        });
       }
     </script>
   </body>
