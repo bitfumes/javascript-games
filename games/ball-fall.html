@@ -21,6 +21,7 @@
       let platformW = canvasW;
       let plDiff = 50;
       let leftPressed = (rightPressed = false);
+      let moveSpeed = 2;
 
       function randHoleX() {
         return Math.floor(Math.random() * 270);
@@ -39,21 +40,21 @@
             if (platforms.length > 10) {
               platforms.splice(0, 4);
             }
-
-            const lastPlatform = platforms[platforms.length - 1];
-            platforms.push({
-              x: 0,
-              y: lastPlatform.y + plDiff,
-              holeX: randHoleX(),
-              holeW: 20,
-            });
-
+            addNewPlatform();
             count = 0;
           }
 
-          platforms.forEach((pl) => {
-            pl.y -= plSpeed;
-          });
+          platforms.forEach((pl) => (pl.y -= plSpeed));
+
+          const closest = platforms.find(
+            (pl) => ball.y < pl.y + 10 && ball.y > pl.y - ball.r
+          );
+
+          if (closest) {
+            holdAndDrop(closest);
+          } else {
+            ball.y += 5;
+          }
 
           ctx.clearRect(0, 0, canvasW, canvasH);
 
@@ -63,6 +64,16 @@
 
           console.log(platforms.length);
         }, 20);
+      }
+
+      function addNewPlatform() {
+        const lastPlatform = platforms[platforms.length - 1];
+        platforms.push({
+          x: 0,
+          y: lastPlatform.y + plDiff,
+          holeX: randHoleX(),
+          holeW: 20,
+        });
       }
 
       function drawPlatforms() {
@@ -88,20 +99,26 @@
         }
       }
 
-      function drawBall() {
-        const firstPl = platforms[0];
-        if (ball.y > firstPl.y - ball.r) {
-          ball.y = firstPl.y - ball.r;
-        } else {
-          ball.y += 5;
+      function holdAndDrop(closest) {
+        if (ball.y > closest.y - ball.r) {
+          if (
+            ball.x > closest.holeX &&
+            ball.x < closest.holeX + closest.holeW
+          ) {
+            ball.y += 1;
+          } else {
+            ball.y = closest.y - ball.r;
+          }
         }
+      }
 
+      function drawBall() {
         // Navigation
         if (leftPressed && ball.x - ball.r > 0) {
-          ball.x -= 5;
+          ball.x -= moveSpeed;
         }
         if (rightPressed && ball.x + ball.r < canvasW) {
-          ball.x += 5;
+          ball.x += moveSpeed;
         }
 
         ctx.beginPath();
@@ -113,6 +130,16 @@
 
       function nagivateBall() {
         document.addEventListener("keydown", (e) => {
+          if (e.getModifierState("Alt")) {
+            if (e.key === "ArrowLeft") {
+              moveSpeed = 10;
+            }
+
+            if (e.key === "ArrowRight") {
+              moveSpeed = 10;
+            }
+          }
+
           if (e.key === "ArrowLeft") {
             leftPressed = true;
           }
@@ -121,6 +148,7 @@
             rightPressed = true;
           }
         });
+
         document.addEventListener("keyup", (e) => {
           if (e.key === "ArrowLeft") {
             leftPressed = false;
@@ -129,6 +157,8 @@
           if (e.key === "ArrowRight") {
             rightPressed = false;
           }
+
+          moveSpeed = 2;
         });
       }
     </script>
