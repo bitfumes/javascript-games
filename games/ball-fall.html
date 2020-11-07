@@ -15,13 +15,14 @@
       const canvasH = canvas.height;
       const canvasW = canvas.width;
 
-      let ball = { x: 150, y: -10, r: 5 };
+      let ball = { x: 150, y: 0, r: 5 };
       let platformH = 10;
       let plSpeed = 1;
       let platformW = canvasW;
       let plDiff = 50;
       let leftPressed = (rightPressed = false);
       let moveSpeed = 2;
+      let interval = null;
 
       function randHoleX() {
         return Math.floor(Math.random() * 270);
@@ -35,7 +36,9 @@
 
       function movePlatforms() {
         let count = 0;
-        setInterval(() => {
+        if (interval) return;
+        interval = setInterval(() => {
+          checkGameOver();
           if (count === Math.floor(plDiff / plSpeed)) {
             if (platforms.length > 10) {
               platforms.splice(0, 4);
@@ -64,6 +67,21 @@
 
           console.log(platforms.length);
         }, 20);
+      }
+
+      function checkGameOver() {
+        if (ball.y < 0) {
+          alert("Game Over !!");
+          reset();
+        }
+      }
+
+      function reset() {
+        ball = { x: 150, y: 0, r: 5 };
+        platforms = [{ x: 0, y: canvasH, holeX: randHoleX(), holeW: 20 }];
+        clearInterval(interval);
+        interval = null;
+        movePlatforms();
       }
 
       function addNewPlatform() {
