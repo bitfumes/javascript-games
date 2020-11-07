@@ -15,14 +15,16 @@
       const canvasH = canvas.height;
       const canvasW = canvas.width;
 
-      let ball = { x: 150, y: 0, r: 5 };
+      let ball = { x: 150, y: 0, w: 15 };
       let platformH = 10;
       let plSpeed = 1;
       let platformW = canvasW;
       let plDiff = 50;
       let leftPressed = (rightPressed = false);
       let moveSpeed = 2;
+      let score = 0;
       let interval = null;
+      let scoreInterval = null;
 
       function randHoleX() {
         return Math.floor(Math.random() * 270);
@@ -33,6 +35,10 @@
       drawPlatforms();
       movePlatforms();
       nagivateBall();
+
+      scoreInterval = setInterval(() => {
+        score++;
+      }, 1000);
 
       function movePlatforms() {
         let count = 0;
@@ -50,7 +56,7 @@
           platforms.forEach((pl) => (pl.y -= plSpeed));
 
           const closest = platforms.find(
-            (pl) => ball.y < pl.y + 10 && ball.y > pl.y - ball.r
+            (pl) => ball.y < pl.y + 10 && ball.y > pl.y - ball.w
           );
 
           if (closest) {
@@ -63,6 +69,7 @@
 
           drawPlatforms();
           drawBall();
+          drawScore();
           count++;
 
           console.log(platforms.length);
@@ -80,7 +87,9 @@
         ball = { x: 150, y: 0, r: 5 };
         platforms = [{ x: 0, y: canvasH, holeX: randHoleX(), holeW: 20 }];
         clearInterval(interval);
+        clearInterval(scoreInterval);
         interval = null;
+        scoreInterval = null;
         movePlatforms();
       }
 
@@ -118,31 +127,40 @@
       }
 
       function holdAndDrop(closest) {
-        if (ball.y > closest.y - ball.r) {
+        if (ball.y > closest.y - ball.w) {
           if (
             ball.x > closest.holeX &&
             ball.x < closest.holeX + closest.holeW
           ) {
             ball.y += 1;
           } else {
-            ball.y = closest.y - ball.r;
+            ball.y = closest.y - ball.w;
           }
         }
       }
 
       function drawBall() {
         // Navigation
-        if (leftPressed && ball.x - ball.r > 0) {
+        if (leftPressed && ball.x - ball.w > 0) {
           ball.x -= moveSpeed;
         }
-        if (rightPressed && ball.x + ball.r < canvasW) {
+        if (rightPressed && ball.x + ball.w < canvasW) {
           ball.x += moveSpeed;
         }
 
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
-        ctx.fillStyle = "brown";
+        const img = new Image();
+        img.src =
+          "https://lh3.googleusercontent.com/proxy/Ih7zPRRgIcXSSTzjpi8pv86ii-w9yQ_9WaZoug4Pho0OZDxYbIQYNot_uiOd0UjEWWsPhEul_nc5vctJ8tX8aEguBlVHaApBK-BhXolLtXG6xKIeUnKm51gQkhx7iquSSLbdTQ";
+        ctx.drawImage(img, ball.x, ball.y, ball.w, ball.w);
+        ctx.closePath();
+      }
+
+      function drawScore() {
+        ctx.beginPath();
+        ctx.fillStyle = "black";
         ctx.fill();
+        ctx.fillText("Score: " + score, 10, 10);
         ctx.closePath();
       }
 
