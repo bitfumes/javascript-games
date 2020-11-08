@@ -12,6 +12,8 @@
         border: 1px solid black;
         width: 50px;
         height: 50px;
+        cursor: pointer;
+        text-align: center;
       }
 
       table tr:first-child td {
@@ -32,22 +34,61 @@
   <body>
     <table>
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
       </tr>
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
       </tr>
       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
+        <td class="cell"></td>
       </tr>
     </table>
 
-    <script></script>
+    <script>
+      let player = "X";
+      const winCom = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      const cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => {
+        cell.addEventListener("click", handleClick);
+      });
+
+      function handleClick(e) {
+        if (e.target.innerText === "") {
+          e.target.innerText = player;
+          checkWinner();
+          switchPlayer();
+        }
+      }
+
+      function checkWinner() {
+        const matched = winCom.some((comb) =>
+          comb.every((ci) => cells[ci].innerText == player)
+        );
+
+        if (matched) {
+          alert(`Player ${player}: You Won !!`);
+        }
+      }
+
+      function switchPlayer() {
+        player = player === "X" ? "O" : "X";
+      }
+    </script>
   </body>
 </html>
