@@ -29,29 +29,41 @@
       table tr td:last-child {
         border-right: none;
       }
+      section {
+        display: flex;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
-    <table>
-      <tr>
-        <td class="cell"></td>
-        <td class="cell"></td>
-        <td class="cell"></td>
-      </tr>
-      <tr>
-        <td class="cell"></td>
-        <td class="cell"></td>
-        <td class="cell"></td>
-      </tr>
-      <tr>
-        <td class="cell"></td>
-        <td class="cell"></td>
-        <td class="cell"></td>
-      </tr>
-    </table>
+    <section>
+      <p id="scoreX"></p>
+      <table>
+        <tr>
+          <td class="cell"></td>
+          <td class="cell"></td>
+          <td class="cell"></td>
+        </tr>
+        <tr>
+          <td class="cell"></td>
+          <td class="cell"></td>
+          <td class="cell"></td>
+        </tr>
+        <tr>
+          <td class="cell"></td>
+          <td class="cell"></td>
+          <td class="cell"></td>
+        </tr>
+      </table>
+      <p id="scoreO"></p>
+    </section>
 
     <script>
       let player = "X";
+      let score = { x: 0, o: 0 };
       const winCom = [
         [0, 1, 2],
         [3, 4, 5],
@@ -68,7 +80,13 @@
         cell.addEventListener("click", handleClick);
       });
 
+      startGame();
+
       function startGame() {
+        const scoreX = document.getElementById("scoreX");
+        const scoreO = document.getElementById("scoreO");
+        scoreX.innerText = `Player X score: ${score.x}`;
+        scoreO.innerText = `Player O score: ${score.o}`;
         cells.forEach((cell) => (cell.innerText = ""));
       }
 
@@ -87,6 +105,11 @@
 
         if (matched) {
           alert(`Player ${player}: You Won !!`);
+          if (player === "X") {
+            score.x += 1;
+          } else {
+            score.o += 1;
+          }
           startGame();
         } else {
           const cellsArray = Array.from(cells);
