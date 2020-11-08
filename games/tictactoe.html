@@ -68,6 +68,10 @@
         cell.addEventListener("click", handleClick);
       });
 
+      function startGame() {
+        cells.forEach((cell) => (cell.innerText = ""));
+      }
+
       function handleClick(e) {
         if (e.target.innerText === "") {
           e.target.innerText = player;
@@ -83,6 +87,13 @@
 
         if (matched) {
           alert(`Player ${player}: You Won !!`);
+          startGame();
+        } else {
+          const cellsArray = Array.from(cells);
+          if (cellsArray.every((cell) => cell.innerText != "")) {
+            alert("Match Draw!!");
+            startGame();
+          }
         }
       }
 
