@@ -55,7 +55,7 @@
         interval = setInterval(() => {
           checkGameOver();
           if (count === Math.floor(plDiff / plSpeed)) {
-            if (platforms.length > 10) {
+            if (platforms.length > 20) {
               platforms.splice(0, 4);
             }
             addNewPlatform();
