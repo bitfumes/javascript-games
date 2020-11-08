@@ -6,9 +6,18 @@
     <title>PingPong Game</title>
   </head>
   <body>
-    <canvas id="canvas" height="300" style="border: 1px solid black"
-      >Heyyy canvas is not supported</canvas
-    >
+    <section style="display: flex; justify-content: center">
+      <div>
+        <h1>Ping Pong Game</h1>
+        <canvas
+          id="canvas"
+          height="600"
+          width="600"
+          style="border: 1px solid black"
+          >Heyyy canvas is not supported</canvas
+        >
+      </div>
+    </section>
     <script>
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
@@ -123,8 +132,8 @@
       function drawCenterLine() {
         ctx.beginPath();
         ctx.setLineDash([5, 5]);
-        ctx.moveTo(150, 0);
-        ctx.lineTo(150, canvasH);
+        ctx.moveTo(canvasW / 2, 0);
+        ctx.lineTo(canvasW / 2, canvasH);
         ctx.stroke();
         ctx.closePath();
       }
